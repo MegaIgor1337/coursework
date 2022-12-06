@@ -1,4 +1,4 @@
-package enums;
+package enums.enumsForBMW;
 
 public enum MaxSpeedForBMW {
     TWO_HUNDRED_AND_SIXTY,

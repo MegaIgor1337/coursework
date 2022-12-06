@@ -3,20 +3,19 @@ import car.Car;
 import car.CarAudi;
 import car.CarBMW;
 import car.CarMersedes;
-import com.sun.security.jgss.GSSUtil;
-import enums.*;
-import factory.*;
+import enums.enumsForAudi.*;
+import enums.enumsForBMW.*;
+import enums.enumsForMersedes.*;
+import factory.factoryForAudi.FactoryForAudi;
+import factory.factoryForBMW.FactoryForBMW;
+import factory.factoryForMersedes.FactoryForMersedes;
 import interfaces.Option;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
 
 public class AutoShop {
 

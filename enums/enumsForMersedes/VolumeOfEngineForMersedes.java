@@ -1,4 +1,4 @@
-package enums;
+package enums.enumsForMersedes;
 
 import interfaces.VolumeEngine;
 

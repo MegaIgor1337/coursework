@@ -1,22 +1,19 @@
-package factory;
+package factory.factoryForAudi;
 
-import car.Car;
 import car.CarAudi;
-import enums.*;
+import enums.enumsForAudi.*;
+import factory.Factory;
+import params.AudiParams;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
 
-import javax.swing.text.html.HTMLDocument;
-import java.util.Iterator;
-import java.util.Set;
-
-public class FactoryForAudi extends Factory {
-    private StorageForAudi storageForAudi;
-    private ServiceToChangeColor serviceToChangeColor;
-    private ServiceToChangeWheels serviceToChangeWheels;
-    private ServiceToChangeOptions serviceToChangeOptions;
-    private CountOfDoorsForAudi[] countsOfDoorsForAudi;
+public class FactoryForAudi extends Factory<CarAudi, AudiParams> {
+    private final StorageForAudi storageForAudi;
+    private final ServiceToChangeColor serviceToChangeColor;
+    private final ServiceToChangeWheels serviceToChangeWheels;
+    private final ServiceToChangeOptions serviceToChangeOptions;
+    private final CountOfDoorsForAudi[] countsOfDoorsForAudi;
 
     public FactoryForAudi(ModelForAudi[] modelsForAudi, ColorForAudi[] colorsForAudi, VolumeOfEngineForAudi[] volumesOfEngineForAudi, WheelSizeForAudi[] wheelSizeForAudi, OptionForAudi[] options, CountOfDoorsForAudi[] countOfDoorsForAudi, StorageForAudi storage, ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels, ServiceToChangeOptions serviceToChangeOptions) {
         super(modelsForAudi, colorsForAudi, volumesOfEngineForAudi, wheelSizeForAudi, options);
@@ -27,8 +24,8 @@ public class FactoryForAudi extends Factory {
         this.countsOfDoorsForAudi = countOfDoorsForAudi;
     }
 
-    public CarAudi createCar(ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, CountOfDoorsForAudi countOfDoorsForAudi) {
-        CarAudi carAudi = storageForAudi.getCarFromStorage(modelForAudi, colorForAudi, volumeOfEngineForAudi, wheelSizeForAudi, optionsForAudi, countOfDoorsForAudi);
+    public CarAudi createCar(ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, AudiParams audiParams) {
+        CarAudi carAudi = storageForAudi.getCarFromStorage(modelForAudi, colorForAudi, volumeOfEngineForAudi, wheelSizeForAudi, optionsForAudi, audiParams);
         if (carAudi != null) {
             if (carAudi.getColor() != colorForAudi) {
                 serviceToChangeColor.changeColor(carAudi, colorForAudi);
@@ -39,7 +36,7 @@ public class FactoryForAudi extends Factory {
             serviceToChangeOptions.changeOptions(carAudi, optionsForAudi);
             return carAudi;
         } else {
-            return new CarAudi(modelForAudi, colorForAudi, volumeOfEngineForAudi, YEAR, wheelSizeForAudi, optionsForAudi, countOfDoorsForAudi);
+            return new CarAudi(modelForAudi, colorForAudi, volumeOfEngineForAudi, YEAR, wheelSizeForAudi, optionsForAudi, audiParams.getCountOfDoorsForAudi());
         }
     }
 

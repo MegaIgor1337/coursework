@@ -1,4 +1,4 @@
-package enums;
+package enums.enumsForAudi;
 
 public enum CountOfDoorsForAudi {
     TWO,

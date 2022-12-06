@@ -1,37 +1,20 @@
 package car;
 
-import enums.*;
+import enums.enumsForAudi.*;
+import params.AudiParams;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import static java.lang.String.format;
 
 public class CarAudi extends Car {
-    private static final String REPRESENTATION_TEMPLATE = "Car{year: %s, model: %s, engineVolume: %s, color: %s, wheelSize: %s, options: %s, count of doors: %s}";
-
-    private final CountOfDoorsForAudi countOfDoors;
-
+    private final CountOfDoorsForAudi countOfDoorsForAudi;
     public CarAudi(ModelForAudi model, ColorForAudi color, VolumeOfEngineForAudi volumeOfEngineForAudi, int year, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, CountOfDoorsForAudi countOfDoors) {
-        super(model, color, volumeOfEngineForAudi, year, wheelSizeForAudi, optionsForAudi);
-        this.countOfDoors = countOfDoors;
+        super(model, color, volumeOfEngineForAudi, year, wheelSizeForAudi, optionsForAudi, new AudiParams(countOfDoors));
+        this.countOfDoorsForAudi = countOfDoors;
     }
 
-    public CountOfDoorsForAudi getCountOfDoors() {
-        return countOfDoors;
-    }
-
-    @Override
-    public String toString() {
-        return format(
-                REPRESENTATION_TEMPLATE,
-                year,
-                model,
-                volumeOfEngine,
-                color,
-                wheelSize,
-                Arrays.toString(options),
-                countOfDoors
-        );
+    public CountOfDoorsForAudi getCountOfDoorsForAudi() {
+        return countOfDoorsForAudi;
     }
 }

@@ -1,8 +1,7 @@
-package factory;
+package factory.factoryForBMW;
 
-import car.CarAudi;
 import car.CarBMW;
-import enums.*;
+import enums.enumsForBMW.*;
 
 import java.util.*;
 

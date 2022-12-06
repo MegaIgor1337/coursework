@@ -1,4 +1,4 @@
-package enums;
+package enums.enumsForMersedes;
 
 public enum CountOfHeadLightForMersedes {
     TWO,

@@ -1,8 +1,8 @@
-package factory;
+package factory.factoryForAudi;
 
-import car.Car;
 import car.CarAudi;
-import enums.*;
+import enums.enumsForAudi.*;
+import params.AudiParams;
 
 import java.util.*;
 
@@ -18,13 +18,13 @@ public class StorageForAudi {
         carsAudi.add(car);
     }
 
-    public CarAudi getCarFromStorage(ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, CountOfDoorsForAudi countOfDoorsForAudi) {
+    public CarAudi getCarFromStorage(ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, AudiParams audiParams) {
         Iterator<CarAudi> iterator = carsAudi.listIterator();
         List<CarAudi> removed = new ArrayList<>();
         CarAudi car = null;
         while (iterator.hasNext()) {
             CarAudi temp = iterator.next();
-            if (verifyModelEngine(temp, modelForAudi, volumeOfEngineForAudi, countOfDoorsForAudi)) {
+            if (verifyModelEngineCountOfDoors(temp, modelForAudi, volumeOfEngineForAudi, audiParams.getCountOfDoorsForAudi())) {
                 if (car == null) {
                     car = temp;
                     iterator.remove();
@@ -47,8 +47,8 @@ public class StorageForAudi {
         return car;
     }
 
-    private boolean verifyModelEngine(CarAudi car, ModelForAudi model, VolumeOfEngineForAudi engineVolume, CountOfDoorsForAudi countOfDoorsForAudi) {
-        return car.getModel() == model && car.getVolumeOfEngine() == engineVolume && car.getCountOfDoors() == countOfDoorsForAudi;
+    private boolean verifyModelEngineCountOfDoors(CarAudi car, ModelForAudi model, VolumeOfEngineForAudi engineVolume, CountOfDoorsForAudi countOfDoorsForAudi) {
+        return car.getModel() == model && car.getVolumeOfEngine() == engineVolume && car.getCountOfDoorsForAudi() == countOfDoorsForAudi;
     }
 
 

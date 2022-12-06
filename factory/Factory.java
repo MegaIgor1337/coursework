@@ -1,10 +1,11 @@
 package factory;
 
+import car.Car;
 import interfaces.*;
 
 import java.util.Arrays;
 
-public class Factory {
+public abstract class Factory<T, P> {
     protected static final int YEAR = 2022;
     protected Model[] models;
     protected Color[] colors;
@@ -12,25 +13,6 @@ public class Factory {
     protected WheelSize[] wheelSizes;
     protected Option[] options;
 
-    public Model[] getModels() {
-        return models;
-    }
-
-    public Color[] getColors() {
-        return colors;
-    }
-
-    public VolumeEngine[] getVolumeEngines() {
-        return volumeEngines;
-    }
-
-    public WheelSize[] getWheelSize() {
-        return wheelSizes;
-    }
-
-    public Option[] getOptions() {
-        return options;
-    }
 
     public Factory(Model[] models, Color[] colors, VolumeEngine[] volumeEngines, WheelSize[] wheelSize, Option[] options) {
         this.models = models;
@@ -39,6 +21,8 @@ public class Factory {
         this.wheelSizes = wheelSize;
         this.options = options;
     }
+
+    public abstract T createCar(Model model, Color color, VolumeEngine volumeEngine, WheelSize wheelSize, Option[] option, P params);
 
     @Override
     public String toString() {

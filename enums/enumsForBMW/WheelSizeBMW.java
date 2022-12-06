@@ -1,4 +1,4 @@
-package enums;
+package enums.enumsForBMW;
 
 import interfaces.WheelSize;
 

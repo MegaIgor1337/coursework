@@ -2,8 +2,15 @@ import autoShop.AutoShop;
 import car.CarAudi;
 import car.CarBMW;
 import car.CarMersedes;
-import enums.*;
-import factory.*;
+import enums.enumsForAudi.*;
+import enums.enumsForBMW.*;
+import enums.enumsForMersedes.*;
+import factory.factoryForAudi.FactoryForAudi;
+import factory.factoryForAudi.StorageForAudi;
+import factory.factoryForBMW.FactoryForBMW;
+import factory.factoryForBMW.StorageForBMW;
+import factory.factoryForMersedes.FactoryForMersedes;
+import factory.factoryForMersedes.StorageForMersedes;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
@@ -11,7 +18,6 @@ import service.ServiceToChangeWheels;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {

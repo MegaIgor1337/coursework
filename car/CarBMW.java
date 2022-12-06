@@ -1,9 +1,10 @@
 package car;
 
-import enums.*;
+import enums.enumsForBMW.*;
+import params.BMWParams;
+import params.Params;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -13,7 +14,7 @@ public class CarBMW extends Car {
     private final MaxSpeedForBMW maxSpeed;
 
     public CarBMW(ModelForBMW modelForBMW, ColorForBMW colorForBMW, VolumeOfEngineForBMW volumeOfEngineForBMW, int year, WheelSizeBMW wheelSizeBMW, OptionForBMW[] optionForBMW, MaxSpeedForBMW maxSpeed) {
-        super(modelForBMW, colorForBMW, volumeOfEngineForBMW, year, wheelSizeBMW, optionForBMW);
+        super(modelForBMW, colorForBMW, volumeOfEngineForBMW, year, wheelSizeBMW, optionForBMW, new BMWParams(maxSpeed));
         this.maxSpeed = maxSpeed;
     }
 

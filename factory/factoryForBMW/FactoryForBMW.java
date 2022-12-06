@@ -1,21 +1,20 @@
-package factory;
+package factory.factoryForBMW;
 
 import car.CarBMW;
-import car.CarMersedes;
-import enums.*;
+import enums.enumsForBMW.*;
+import factory.Factory;
+import params.BMWParams;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
 
-import java.util.Set;
+public class FactoryForBMW extends Factory<CarBMW, BMWParams> {
 
-public class FactoryForBMW extends Factory {
-
-    private StorageForBMW storageForBMW;
-    private ServiceToChangeColor serviceToChangeColor;
-    private ServiceToChangeWheels serviceToChangeWheels;
-    private ServiceToChangeOptions serviceToChangeOptions;
-    private MaxSpeedForBMW[] maxSpeedsForBMW;
+    private final StorageForBMW storageForBMW;
+    private final ServiceToChangeColor serviceToChangeColor;
+    private final ServiceToChangeWheels serviceToChangeWheels;
+    private final ServiceToChangeOptions serviceToChangeOptions;
+    private final MaxSpeedForBMW[] maxSpeedsForBMW;
 
     public FactoryForBMW(ModelForBMW[] modelsForBMW, ColorForBMW[] colorsForBMW, VolumeOfEngineForBMW[] volumesOfEngineForBMW, WheelSizeBMW[] wheelSizeForBMW, OptionForBMW[] options, MaxSpeedForBMW[] maxSpeedsForBMW, StorageForBMW storage, ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels, ServiceToChangeOptions serviceToChangeOptions) {
         super(modelsForBMW, colorsForBMW, volumesOfEngineForBMW, wheelSizeForBMW, options);
@@ -26,8 +25,8 @@ public class FactoryForBMW extends Factory {
         this.maxSpeedsForBMW = maxSpeedsForBMW;
     }
 
-    public CarBMW createCar(ModelForBMW modelForBMW, ColorForBMW colorForBMW, VolumeOfEngineForBMW volumeOfEngineForBMW, WheelSizeBMW wheelSizeBMW, OptionForBMW[] optionForBMWS, MaxSpeedForBMW maxSpeedForBMW) {
-        CarBMW carBMW = storageForBMW.getCarFromStorage(modelForBMW, colorForBMW, volumeOfEngineForBMW, wheelSizeBMW, optionForBMWS, maxSpeedForBMW);
+    public CarBMW createCar(ModelForBMW modelForBMW, ColorForBMW colorForBMW, VolumeOfEngineForBMW volumeOfEngineForBMW, WheelSizeBMW wheelSizeBMW, OptionForBMW[] optionForBMWS, BMWParams bmwParams) {
+        CarBMW carBMW = storageForBMW.getCarFromStorage(modelForBMW, colorForBMW, volumeOfEngineForBMW, wheelSizeBMW, optionForBMWS, bmwParams.getMaxSpeedForBMW());
         if (carBMW != null) {
             if (carBMW.getColor() != colorForBMW) {
                 serviceToChangeColor.changeColor(carBMW, colorForBMW);
@@ -38,7 +37,7 @@ public class FactoryForBMW extends Factory {
             serviceToChangeOptions.changeOptions(carBMW, optionForBMWS);
             return carBMW;
         } else {
-            return new CarBMW(modelForBMW, colorForBMW, volumeOfEngineForBMW, YEAR, wheelSizeBMW, optionForBMWS, maxSpeedForBMW);
+            return new CarBMW(modelForBMW, colorForBMW, volumeOfEngineForBMW, YEAR, wheelSizeBMW, optionForBMWS, bmwParams.getMaxSpeedForBMW());
         }
     }
 
