@@ -1,6 +1,8 @@
 package enums.enumsForAudi;
 
-public enum CountOfDoorsForAudi {
+import interfaces.OtherDetail;
+
+public enum CountOfDoorsForAudi implements OtherDetail {
     TWO,
     THREE,
     FOUR,

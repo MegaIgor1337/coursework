@@ -1,18 +1,20 @@
 package car;
 
 import enums.enumsForMersedes.*;
+import params.MersedesParams;
 
 import java.util.Arrays;
 
 import static java.lang.String.format;
 
 public class CarMersedes extends Car {
-    private static final String REPRESENTATION_TEMPLATE = "Car{year: %s, model: %s, engineVolume: %s, color: %s, wheelSize: %s, options: %s, count of headLights: %s}";
 
     private final CountOfHeadLightForMersedes countOfHeadLight;
 
-    public CarMersedes(ModelForMersedes modelForMersedes, ColorForMersedes colorForMersedes, VolumeOfEngineForMersedes volumeOfEngineForMersedes, int year, WheelSizeMersedes wheelSizeMersedes, OptionForMersedes[] optionsForMersedes, CountOfHeadLightForMersedes countOfHeadLight) {
-        super(modelForMersedes, colorForMersedes, volumeOfEngineForMersedes, year, wheelSizeMersedes, optionsForMersedes);
+    public CarMersedes(ModelForMersedes modelForMersedes, ColorForMersedes colorForMersedes, VolumeOfEngineForMersedes volumeOfEngineForMersedes,
+                       int year, WheelSizeMersedes wheelSizeMersedes, OptionForMersedes[] optionsForMersedes, CountOfHeadLightForMersedes countOfHeadLight) {
+        super(modelForMersedes, colorForMersedes, volumeOfEngineForMersedes,
+                year, wheelSizeMersedes, optionsForMersedes, new MersedesParams(countOfHeadLight));
         this.countOfHeadLight = countOfHeadLight;
     }
 
@@ -22,15 +24,9 @@ public class CarMersedes extends Car {
 
     @Override
     public String toString() {
-        return format(
-                REPRESENTATION_TEMPLATE,
-                year,
-                model,
-                volumeOfEngine,
-                color,
-                wheelSize,
-                Arrays.toString(options),
-                countOfHeadLight
-        );
+        return "Audi {" +
+                super.toString() +
+                ", CountOfHeadLights = " + countOfHeadLight +
+                "}";
     }
 }

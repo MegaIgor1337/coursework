@@ -1,6 +1,8 @@
 package enums.enumsForMersedes;
 
-public enum CountOfHeadLightForMersedes {
+import interfaces.OtherDetail;
+
+public enum CountOfHeadLightForMersedes implements OtherDetail {
     TWO,
     THREE,
     FOUR,

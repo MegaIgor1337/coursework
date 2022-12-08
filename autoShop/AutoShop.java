@@ -1,4 +1,5 @@
 package autoShop;
+
 import car.Car;
 import car.CarAudi;
 import car.CarBMW;
@@ -9,13 +10,20 @@ import enums.enumsForMersedes.*;
 import factory.factoryForAudi.FactoryForAudi;
 import factory.factoryForBMW.FactoryForBMW;
 import factory.factoryForMersedes.FactoryForMersedes;
-import interfaces.Option;
+import interfaces.*;
+import params.AudiParams;
+import params.BMWParams;
+import params.MersedesParams;
+import params.Params;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AutoShop {
 
@@ -34,7 +42,9 @@ public class AutoShop {
     private final ServiceToChangeWheels serviceToChangeWheels;
     private final ServiceToChangeOptions serviceToChangeOptions;
 
-    public AutoShop(FactoryForBMW factoryForBMW, FactoryForMersedes factoryForMersedes, FactoryForAudi factoryForAudi, ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels, ServiceToChangeOptions serviceToChangeOptions) {
+    public AutoShop(FactoryForBMW factoryForBMW, FactoryForMersedes factoryForMersedes, FactoryForAudi factoryForAudi,
+                    ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels,
+                    ServiceToChangeOptions serviceToChangeOptions) {
         this.factoryForBMW = factoryForBMW;
         this.factoryForMersedes = factoryForMersedes;
         this.factoryForAudi = factoryForAudi;
@@ -43,377 +53,368 @@ public class AutoShop {
         this.serviceToChangeOptions = serviceToChangeOptions;
     }
 
-    public Car orderCar(BufferedReader reader, boolean check) {
-        String name;
-        while (true) {
-            name = enterName(reader);
-            if (name.equalsIgnoreCase(AUDI) || name.equalsIgnoreCase(MERSEDES) || name.equalsIgnoreCase(BMW)){
-                break;
-            } else {
-                System.out.println(MESSAGE_IF_DATA_WRONG);
-            }
+    public Car orderCar1(BufferedReader reader) {
+        String name = enterName(reader);
+        Model model = enterModel(reader, name);
+        Color color = enterColor(reader, name);
+        VolumeEngine volumeEngine = enterVolume(reader, name);
+        WheelSize wheelSize = enterWheelSize(reader, name);
+        Option[] options = enterOptions(reader, name);
+        Params params = enterParams(reader, name);
+        if (validationOnNull(name, model, color, volumeEngine, wheelSize, options, params)) {
+            return null;
         }
-        if (name.equalsIgnoreCase(AUDI)) {
-            String model = null;
-            String color = null;
-            String volumeOfEngine = null;
-            int year;
-            String wheelSize = null;
-            OptionForAudi[] optionsForAudi;
-            String countOfDoors = null;
-            boolean trueOrFalse1 = true;
-            while (trueOrFalse1) {
-                factoryForAudi.printAvailableModels();
-                model = enterModel(reader);
-                try {
-                    ModelForAudi.valueOf(model.toUpperCase());
-                    trueOrFalse1 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse2 = true;
-            while (trueOrFalse2) {
-                factoryForAudi.printAvailableColors();
-                color = enterColor(reader);
-                try {
-                    ColorForAudi.valueOf(color.toUpperCase());
-                    trueOrFalse2 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse3 = true;
-            while (trueOrFalse3) {
-                factoryForAudi.printAvailableVolumes();
-                volumeOfEngine = enterVolumeOfEngine(reader);
-                try {
-                    VolumeOfEngineForAudi.valueOf(volumeOfEngine.toUpperCase());
-                    trueOrFalse3 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse4 = true;
-            while (trueOrFalse4) {
-                factoryForAudi.printAvailableWheelSizes();
-                wheelSize = enterWheelSize(reader);
-                try {
-                    WheelSizeForAudi.valueOf(wheelSize.toUpperCase());
-                    trueOrFalse4 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            factoryForAudi.printAvailableOptions();
-            optionsForAudi = enterOptionsForAudi(reader);
-            boolean trueOrFalse5 = true;
-            while (trueOrFalse5) {
-                factoryForAudi.printAvailableCountsOfDoors();
-                countOfDoors = enterCountOfDoorsForAudi(reader);
-                try {
-                    CountOfDoorsForAudi.valueOf(countOfDoors.toUpperCase());
-                    trueOrFalse5 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            if (check) {
-                System.out.println("Your car:");
-                return factoryForAudi.createCar(ModelForAudi.valueOf(model.toUpperCase()), ColorForAudi.valueOf(color.toUpperCase()), VolumeOfEngineForAudi.valueOf(volumeOfEngine.toUpperCase()), WheelSizeForAudi.valueOf(wheelSize.toUpperCase()), optionsForAudi, CountOfDoorsForAudi.valueOf(countOfDoors.toUpperCase()));
-            } else {
-                while (true) {
-                    System.out.println("Enter year of production");
-                    try {
-                        try {
-                            year = Integer.parseInt(reader.readLine());
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println(MESSAGE_IF_DATA_WRONG);
-                        }
-                    } catch (IOException e) {
-                        catchError();
-                    }
-                }
-                CarAudi carAudi = new CarAudi(ModelForAudi.valueOf(model.toUpperCase()), ColorForAudi.valueOf(color.toUpperCase()), VolumeOfEngineForAudi.valueOf(volumeOfEngine.toUpperCase()), year, WheelSizeForAudi.valueOf(wheelSize.toUpperCase()), optionsForAudi, CountOfDoorsForAudi.valueOf(countOfDoors.toUpperCase()));
-                System.out.println("Enter new details");
-                String newColor = null;
-                boolean trueOrFalse6 = true;
-                while (trueOrFalse6) {
-                    factoryForAudi.printAvailableColors();
-                    newColor = enterColor(reader);
-                    try {
-                        ColorForAudi.valueOf(newColor.toUpperCase());
-                        trueOrFalse6 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeColor.changeColor(carAudi, ColorForAudi.valueOf(newColor.toUpperCase()));
-                String newWheelSize = null;
-                boolean trueOrFalse7 = true;
-                while (trueOrFalse7) {
-                    factoryForAudi.printAvailableWheelSizes();
-                    newWheelSize = enterWheelSize(reader);
-                    try {
-                        WheelSizeForAudi.valueOf(newWheelSize.toUpperCase());
-                        trueOrFalse7 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeWheels.changeWheels(carAudi, WheelSizeForAudi.valueOf(newWheelSize.toUpperCase()));
-                factoryForAudi.printAvailableOptions();
-                OptionForAudi[] newOptions = enterOptionsForAudi(reader);
-                serviceToChangeOptions.changeOptions(carAudi, newOptions);
-                System.out.println("Your fixed car:");
-                return carAudi;
-            }
-        }
-        if (name.equalsIgnoreCase(MERSEDES)) {
-            String model = null;
-            String color = null;
-            String volumeOfEngine = null;
-            int year;
-            String wheelSize = null;
-            OptionForMersedes[] optionsForMersedes;
-            String countOfHeadLights = null;
-            boolean trueOrFalse1 = true;
-            while (trueOrFalse1) {
-                factoryForMersedes.printAvailableModels();
-                model = enterModel(reader);
-                try {
-                    ModelForMersedes.valueOf(model.toUpperCase());
-                    trueOrFalse1 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse2 = true;
-            while (trueOrFalse2) {
-                factoryForMersedes.printAvailableColors();
-                color = enterColor(reader);
-                try {
-                    ColorForMersedes.valueOf(color.toUpperCase());
-                    trueOrFalse2 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse3 = true;
-            while (trueOrFalse3) {
-                factoryForMersedes.printAvailableVolumes();
-                volumeOfEngine = enterVolumeOfEngine(reader);
-                try {
-                    VolumeOfEngineForMersedes.valueOf(volumeOfEngine.toUpperCase());
-                    trueOrFalse3 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse4 = true;
-            while (trueOrFalse4) {
-                factoryForMersedes.printAvailableWheelSizes();
-                wheelSize = enterWheelSize(reader);
-                try {
-                    WheelSizeMersedes.valueOf(wheelSize.toUpperCase());
-                    trueOrFalse4 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            factoryForMersedes.printAvailableOptions();
-            optionsForMersedes = enterOptionsForMersedes(reader);
-            boolean trueOrFalse5 = true;
-            while (trueOrFalse5) {
-                factoryForMersedes.printAvailableCountsOfHeadLights();
-                countOfHeadLights = enterCountOfHeadLights(reader);
-                try {
-                    CountOfHeadLightForMersedes.valueOf(countOfHeadLights.toUpperCase());
-                    trueOrFalse5 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            if (check) {
-                System.out.println("Your car:");
-                return factoryForMersedes.createCar(ModelForMersedes.valueOf(model.toUpperCase()), ColorForMersedes.valueOf(color.toUpperCase()), VolumeOfEngineForMersedes.valueOf(volumeOfEngine.toUpperCase()), WheelSizeMersedes.valueOf(wheelSize.toUpperCase()), optionsForMersedes, CountOfHeadLightForMersedes.valueOf(countOfHeadLights.toUpperCase()));
-            } else {
-                while (true) {
-                    System.out.println("Enter year of production");
-                    try {
-                        try {
-                            year = Integer.parseInt(reader.readLine());
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println(MESSAGE_IF_DATA_WRONG);
-                        }
-                    } catch (IOException e) {
-                        catchError();
-                    }
-                }
-                CarMersedes carMersedes = new CarMersedes(ModelForMersedes.valueOf(model.toUpperCase()), ColorForMersedes.valueOf(color.toUpperCase()), VolumeOfEngineForMersedes.valueOf(volumeOfEngine.toUpperCase()), year, WheelSizeMersedes.valueOf(wheelSize.toUpperCase()), optionsForMersedes, CountOfHeadLightForMersedes.valueOf(countOfHeadLights.toUpperCase()));
-                System.out.println("Enter new details");
-                String newColor = null;
-                boolean trueOrFalse6 = true;
-                while (trueOrFalse6) {
-                    factoryForMersedes.printAvailableColors();
-                    newColor = enterColor(reader);
-                    try {
-                        ColorForMersedes.valueOf(newColor.toUpperCase());
-                        trueOrFalse6 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeColor.changeColor(carMersedes, ColorForMersedes.valueOf(newColor.toUpperCase()));
-                String newWheelSize = null;
-                boolean trueOrFalse7 = true;
-                while (trueOrFalse7) {
-                    factoryForMersedes.printAvailableWheelSizes();
-                    newWheelSize = enterWheelSize(reader);
-                    try {
-                        WheelSizeMersedes.valueOf(newWheelSize.toUpperCase());
-                        trueOrFalse7 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeWheels.changeWheels(carMersedes, WheelSizeMersedes.valueOf(newWheelSize.toUpperCase()));
-                factoryForMersedes.printAvailableOptions();
-                OptionForMersedes[] newOptions = enterOptionsForMersedes(reader);
-                serviceToChangeOptions.changeOptions(carMersedes, newOptions);
-                System.out.println("Your fixed car:");
-                return carMersedes;
-            }
-        }
-        if (name.equalsIgnoreCase(BMW)) {
-            String model = null;
-            String color = null;
-            String volumeOfEngine = null;
-            int year;
-            String wheelSize = null;
-            OptionForBMW[] optionsForBMW;
-            String maxSpeed = null;
-            boolean trueOrFalse1 = true;
-            while (trueOrFalse1) {
-                factoryForBMW.printAvailableModels();
-                model = enterModel(reader);
-                try {
-                    ModelForBMW.valueOf(model.toUpperCase());
-                    trueOrFalse1 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse2 = true;
-            while (trueOrFalse2) {
-                factoryForBMW.printAvailableColors();
-                color = enterColor(reader);
-                try {
-                    ColorForBMW.valueOf(color.toUpperCase());
-                    trueOrFalse2 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse3 = true;
-            while (trueOrFalse3) {
-                factoryForBMW.printAvailableVolumes();
-                volumeOfEngine = enterVolumeOfEngine(reader);
-                try {
-                    VolumeOfEngineForBMW.valueOf(volumeOfEngine.toUpperCase());
-                    trueOrFalse3 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            boolean trueOrFalse4 = true;
-            while (trueOrFalse4) {
-                factoryForBMW.printAvailableWheelSizes();
-                wheelSize = enterWheelSize(reader);
-                try {
-                    WheelSizeBMW.valueOf(wheelSize.toUpperCase());
-                    trueOrFalse4 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            factoryForBMW.printAvailableOptions();
-            optionsForBMW = enterOptionsForBMW(reader);
-            boolean trueOrFalse5 = true;
-            while (trueOrFalse5) {
-                factoryForBMW.printAvailableMaxSpeed();
-                maxSpeed = enterMaxSpeedForBMW(reader);
-                try {
-                    MaxSpeedForBMW.valueOf(maxSpeed.toUpperCase());
-                    trueOrFalse5 = false;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(MESSAGE_IF_DATA_WRONG);
-                }
-            }
-            if (check) {
-                System.out.println("Your car: ");
-                return factoryForBMW.createCar(ModelForBMW.valueOf(model.toUpperCase()), ColorForBMW.valueOf(color.toUpperCase()), VolumeOfEngineForBMW.valueOf(volumeOfEngine.toUpperCase()), WheelSizeBMW.valueOf(wheelSize.toUpperCase()), optionsForBMW, MaxSpeedForBMW.valueOf(maxSpeed.toUpperCase()));
-            } else {
-                while (true) {
-                    System.out.println("Enter year of production");
-                    try {
-                        try {
-                            year = Integer.parseInt(reader.readLine());
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println(MESSAGE_IF_DATA_WRONG);
-                        }
-                    } catch (IOException e) {
-                        catchError();
-                    }
-                }
-                CarBMW carBMW = new CarBMW(ModelForBMW.valueOf(model.toUpperCase()), ColorForBMW.valueOf(color.toUpperCase()), VolumeOfEngineForBMW.valueOf(volumeOfEngine.toUpperCase()), year, WheelSizeBMW.valueOf(wheelSize.toUpperCase()), optionsForBMW, MaxSpeedForBMW.valueOf(maxSpeed.toUpperCase()));
-                System.out.println("Enter new details");
-                String newColor = null;
-                boolean trueOrFalse6 = true;
-                while (trueOrFalse6) {
-                    factoryForBMW.printAvailableColors();
-                    newColor = enterColor(reader);
-                    try {
-                        ColorForBMW.valueOf(color.toUpperCase());
-                        trueOrFalse6 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeColor.changeColor(carBMW, ColorForBMW.valueOf(newColor.toUpperCase()));
-                String newWheelSize = null;
-                boolean trueOrFalse7 = true;
-                while (trueOrFalse7) {
-                    factoryForBMW.printAvailableWheelSizes();
-                    newWheelSize = enterWheelSize(reader);
-                    try {
-                        WheelSizeBMW.valueOf(newWheelSize.toUpperCase());
-                        trueOrFalse7 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                }
-                serviceToChangeWheels.changeWheels(carBMW, WheelSizeBMW.valueOf(newWheelSize.toUpperCase()));
-                factoryForBMW.printAvailableOptions();
-                OptionForBMW[] newOptions = enterOptionsForBMW(reader);
-                serviceToChangeOptions.changeOptions(carBMW, newOptions);
-                System.out.println("Your fixed car:");
-                return carBMW;
-            }
+        if (validationOnName(name, AUDI)) {
+            return factoryForAudi.createCar((ModelForAudi) model, (ColorForAudi) color, (VolumeOfEngineForAudi) volumeEngine,
+                    (WheelSizeForAudi) wheelSize, (OptionForAudi[]) options, (AudiParams) params);
+        } else if (validationOnName(name, BMW)) {
+            return factoryForBMW.createCar((ModelForBMW) model, (ColorForBMW) color, (VolumeOfEngineForBMW) volumeEngine,
+                    (WheelSizeBMW) wheelSize, (OptionForBMW[]) options, (BMWParams) params);
+        } else if (validationOnName(name, MERSEDES)) {
+            return factoryForMersedes.createCar((ModelForMersedes) model, (ColorForMersedes) color, (VolumeOfEngineForMersedes) volumeEngine,
+                    (WheelSizeMersedes) wheelSize, (OptionForMersedes[]) options, (MersedesParams) params);
         }
         return null;
     }
+
+    private boolean validationOnName(String name, String carName) {
+        return name.equalsIgnoreCase(carName);
+    }
+
+    private Model enterModel(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return enterModelAudi(reader);
+        } else if (validationOnName(name, MERSEDES)) {
+            return enterModelMersedes(reader);
+        } else if (validationOnName(name, BMW)) {
+            return enterModelBMW(reader);
+        }
+        return null;
+    }
+
+    private Color enterColor(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return enterColorForAudi(reader);
+        } else if (validationOnName(name, BMW)) {
+            return enterColorForBMW(reader);
+        } else if (validationOnName(name, MERSEDES)) {
+            return enterColorForMersedes(reader);
+        }
+        return null;
+    }
+
+    private VolumeEngine enterVolume(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return enterVolumeForAudi(reader);
+        } else if (validationOnName(name, BMW)) {
+            return enterVolumeForBMW(reader);
+        } else if (validationOnName(name, MERSEDES)) {
+            return enterVolumeForMersedes(reader);
+        }
+        return null;
+    }
+
+    private WheelSize enterWheelSize(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return enterWheelSizeForAudi(reader);
+        } else if (validationOnName(name, BMW)) {
+            return enterWheelSizeForBMW(reader);
+        } else if (validationOnName(name, MERSEDES)) {
+            return enterWheelSizeForMersedes(reader);
+        }
+        return null;
+    }
+
+    private Option[] enterOptions(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return enterOptionsForAudi(reader);
+        } else if (validationOnName(name, BMW)) {
+            return enterOptionsForBMW(reader);
+        } else if (validationOnName(name, MERSEDES)) {
+            return enterOptionsForMersedes(reader);
+        }
+        return null;
+    }
+
+    private Params enterParams(BufferedReader reader, String name) {
+        if (validationOnName(name, AUDI)) {
+            return new AudiParams(enterCountOfDoors(reader));
+        } else if (validationOnName(name, BMW)) {
+            return new BMWParams(enterMaxSpeed(reader));
+        } else if (validationOnName(name, MERSEDES)) {
+            return new MersedesParams(enterCountOfHeadLights(reader));
+        }
+        return null;
+    }
+
+    private CountOfDoorsForAudi enterCountOfDoors(BufferedReader reader) {
+        while (true) {
+            try {
+                return CountOfDoorsForAudi.valueOf(enterCountOfDoorsForAudi(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private CountOfHeadLightForMersedes enterCountOfHeadLights(BufferedReader reader) {
+        while (true) {
+            try {
+                return CountOfHeadLightForMersedes.valueOf(enterCountOfHeadLightsForMersedes(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private MaxSpeedForBMW enterMaxSpeed(BufferedReader reader) {
+        while (true) {
+            try {
+                return MaxSpeedForBMW.valueOf(enterMaxSpeedForBMW(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private OptionForAudi[] enterOptionsForAudi(BufferedReader reader) {
+        Set<OptionForAudi> options = new HashSet<>();
+        factoryForAudi.printAvailableOptions();
+        while (true) {
+            try {
+                String option = enterOption(reader);
+                if (option == null) {
+                    break;
+                }
+                options.add(OptionForAudi.valueOf(option.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+        return getArrayFromSetForAudi(options);
+    }
+
+    private OptionForAudi[] getArrayFromSetForAudi(Set<OptionForAudi> set) {
+        OptionForAudi[] options = new OptionForAudi[set.size()];
+        int i = 0;
+        for (OptionForAudi option : set) {
+            options[i++] = option;
+        }
+        return options;
+    }
+
+    private OptionForMersedes[] enterOptionsForMersedes(BufferedReader reader) {
+        Set<OptionForMersedes> options = new HashSet<>();
+        factoryForMersedes.printAvailableOptions();
+        while (true) {
+            try {
+                String option = enterOption(reader);
+                if (option == null) {
+                    break;
+                }
+                options.add(OptionForMersedes.valueOf(option.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+        return getArrayFromSetForMersedes(options);
+    }
+
+    private OptionForMersedes[] getArrayFromSetForMersedes(Set<OptionForMersedes> set) {
+        OptionForMersedes[] options = new OptionForMersedes[set.size()];
+        int i = 0;
+        for (OptionForMersedes option : set) {
+            options[i++] = option;
+        }
+        return options;
+    }
+
+    private OptionForBMW[] enterOptionsForBMW(BufferedReader reader) {
+        Set<OptionForBMW> options = new HashSet<>();
+        factoryForBMW.printAvailableOptions();
+        while (true) {
+            try {
+                String option = enterOption(reader);
+                if (option == null) {
+                    break;
+                }
+                options.add(OptionForBMW.valueOf(option.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+        return getArrayFromSetForBMW(options);
+    }
+
+    private OptionForBMW[] getArrayFromSetForBMW(Set<OptionForBMW> set) {
+        OptionForBMW[] options = new OptionForBMW[set.size()];
+        int i = 0;
+        for (OptionForBMW option : set) {
+            options[i++] = option;
+        }
+        return options;
+    }
+
+    private String enterOption(BufferedReader reader) {
+        System.out.println("Enter option. If you want to stop, enter STOP");
+        String option;
+        try {
+            option = reader.readLine();
+            if (option.equalsIgnoreCase(STOP)) {
+                return null;
+            }
+            return option;
+        } catch (IOException e) {
+            catchError();
+        }
+        return null;
+    }
+
+    private WheelSizeForAudi enterWheelSizeForAudi(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForAudi.printAvailableWheelSizes();
+                return WheelSizeForAudi.valueOf(enterWheelSize(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private WheelSizeBMW enterWheelSizeForBMW(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForBMW.printAvailableWheelSizes();
+                return WheelSizeBMW.valueOf(enterWheelSize(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+
+    private WheelSizeMersedes enterWheelSizeForMersedes(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForMersedes.printAvailableWheelSizes();
+                return WheelSizeMersedes.valueOf(enterWheelSize(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+
+    private VolumeOfEngineForAudi enterVolumeForAudi(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForAudi.printAvailableVolumes();
+                return VolumeOfEngineForAudi.valueOf(enterVolumeOfEngine(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private VolumeOfEngineForBMW enterVolumeForBMW(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForBMW.printAvailableVolumes();
+                return VolumeOfEngineForBMW.valueOf(enterVolumeOfEngine(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private VolumeOfEngineForMersedes enterVolumeForMersedes(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForMersedes.printAvailableVolumes();
+                return VolumeOfEngineForMersedes.valueOf(enterVolumeOfEngine(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private ColorForAudi enterColorForAudi(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForAudi.printAvailableColors();
+                return ColorForAudi.valueOf(enterColor(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+
+    private ColorForBMW enterColorForBMW(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForBMW.printAvailableColors();
+                return ColorForBMW.valueOf(enterColor(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private ColorForMersedes enterColorForMersedes(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForMersedes.printAvailableColors();
+                return ColorForMersedes.valueOf(enterColor(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+
+    private ModelForAudi enterModelAudi(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForAudi.printAvailableModels();
+                return ModelForAudi.valueOf(enterModel(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private ModelForMersedes enterModelMersedes(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForMersedes.printAvailableModels();
+                return ModelForMersedes.valueOf(enterModel(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+    private ModelForBMW enterModelBMW(BufferedReader reader) {
+        while (true) {
+            try {
+                factoryForBMW.printAvailableModels();
+                return ModelForBMW.valueOf(enterModel(reader).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println(MESSAGE_IF_DATA_WRONG);
+            }
+        }
+    }
+
+
     private void printAvailableNames() {
-        System.out.println("Available cars: " + AUDI + ", " +  MERSEDES + ", " + BMW);
+        System.out.println("Available cars: " + AUDI + ", " + MERSEDES + ", " + BMW);
     }
 
 
     private void catchError() {
         System.out.println(MESSAGE_IF_ERROR);
-        System.exit(0);
+        System.exit(-1);
     }
 
     private String enterName(BufferedReader reader) {
@@ -479,112 +480,8 @@ public class AutoShop {
         return wheelSize;
     }
 
-    private OptionForAudi[] enterOptionsForAudi(BufferedReader reader) {
-        OptionForAudi[] options = null;
-        System.out.println("Enter options. If you want to stop entering options, enter STOP");
-        while (true) {
-            try {
-                String option = reader.readLine();
-                if (!option.equals(STOP)) {
-                    try {
-                        OptionForAudi.valueOf(option.toUpperCase());
-                        if (options != null) {
-                            if (checkOnOption(options, OptionForAudi.valueOf(option.toUpperCase()))) {
-                                OptionForAudi[] tmp = new OptionForAudi[options.length + 1];
-                                for (int i = 0; i < options.length; i++) {
-                                    tmp[i] = options[i];
-                                }
-                                tmp[tmp.length - 1] = OptionForAudi.valueOf(option.toUpperCase());
-                                options = tmp;
-                            }
-                        } else {
-                            options = new OptionForAudi[1];
-                            options[0] = OptionForAudi.valueOf(option.toUpperCase());
-                        }
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                } else {
-                    break;
-                }
-            } catch (IOException e) {
-                catchError();
-            }
-        }
-        return options;
-    }
-
-    private OptionForMersedes[] enterOptionsForMersedes(BufferedReader reader) {
-        OptionForMersedes[] options = null;
-        System.out.println("Enter options. If you want to stop entering options, enter STOP");
-        while (true) {
-            try {
-                String option = reader.readLine();
-                if (!option.equals(STOP)) {
-                    try {
-                        OptionForMersedes.valueOf(option.toUpperCase());
-                        if (options != null) {
-                            if (checkOnOption(options, OptionForMersedes.valueOf(option.toUpperCase()))) {
-                                OptionForMersedes[] tmp = new OptionForMersedes[options.length + 1];
-                                for (int i = 0; i < options.length; i++) {
-                                    tmp[i] = options[i];
-                                }
-                                tmp[tmp.length - 1] = OptionForMersedes.valueOf(option.toUpperCase());
-                                options = tmp;
-                            }
-                        } else {
-                            options = new OptionForMersedes[1];
-                            options[0] = OptionForMersedes.valueOf(option.toUpperCase());
-                        }
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                } else {
-                    break;
-                }
-            } catch (IOException e) {
-                catchError();
-            }
-        }
-        return options;
-    }
-
-    private OptionForBMW[] enterOptionsForBMW(BufferedReader reader) {
-        OptionForBMW[] options = null;
-        System.out.println("Enter options. If you want to stop entering options, enter STOP");
-        while (true) {
-            try {
-                String option = reader.readLine();
-                if (!option.equals(STOP)) {
-                    try {
-                        OptionForBMW.valueOf(option.toUpperCase());
-                        if (options != null) {
-                            if (checkOnOption(options, OptionForBMW.valueOf(option.toUpperCase()))) {
-                                OptionForBMW[] tmp = new OptionForBMW[options.length + 1];
-                                for (int i = 0; i < options.length; i++) {
-                                    tmp[i] = options[i];
-                                }
-                                tmp[tmp.length - 1] = OptionForBMW.valueOf(option.toUpperCase());
-                                options = tmp;
-                            }
-                        } else {
-                            options = new OptionForBMW[1];
-                            options[0] = OptionForBMW.valueOf(option.toUpperCase());
-                        }
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(MESSAGE_IF_DATA_WRONG);
-                    }
-                } else {
-                    break;
-                }
-            } catch (IOException e) {
-                catchError();
-            }
-        }
-        return options;
-    }
-
     private String enterCountOfDoorsForAudi(BufferedReader reader) {
+        factoryForAudi.printAvailableCountsOfDoors();
         System.out.println("Enter count of doors");
         String countOfDoors = null;
         try {
@@ -595,7 +492,8 @@ public class AutoShop {
         return countOfDoors;
     }
 
-    private String enterCountOfHeadLights(BufferedReader reader) {
+    private String enterCountOfHeadLightsForMersedes(BufferedReader reader) {
+        factoryForMersedes.printAvailableCountsOfHeadLights();
         System.out.println("Enter count of headlights");
         String countOfHeadLights = null;
         try {
@@ -607,6 +505,7 @@ public class AutoShop {
     }
 
     private String enterMaxSpeedForBMW(BufferedReader reader) {
+        factoryForBMW.printAvailableMaxSpeed();
         System.out.println("Enter max speed");
         String maxSpeed = null;
         try {
@@ -614,16 +513,131 @@ public class AutoShop {
         } catch (IOException e) {
             catchError();
         }
-        return  maxSpeed;
+        return maxSpeed;
     }
 
-    private boolean checkOnOption(Option[] options, Option option) {
-        for (Option option1 : options) {
-            if (option1.equals(option)) {
-                System.out.println("This option already exists");
-                return false;
+    private int enterYearOfCarProduction(BufferedReader reader) {
+        Calendar calendar = Calendar.getInstance();
+        while (true) {
+            try {
+                try {
+                    System.out.println("Enter year of production your car");
+                    int year = Integer.parseInt(reader.readLine());
+                    if (year > calendar.get(Calendar.YEAR)) {
+                        System.out.println(MESSAGE_IF_DATA_WRONG);
+                    } else {
+                        return year;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(MESSAGE_IF_DATA_WRONG);
+                }
+            } catch (IOException e) {
+                catchError();
             }
         }
-        return true;
+    }
+
+    private boolean validationOnNull(String name, Model model, Color color, VolumeEngine volumeEngine,
+                                     WheelSize wheelSize, Option[] options, Params params) {
+        if (name == null || model == null || color == null || volumeEngine == null ||
+                wheelSize == null || options == null || params == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public Car enterCar(BufferedReader reader) {
+        String name = enterName(reader);
+        Model model = enterModel(reader, name);
+        Color color = enterColor(reader, name);
+        VolumeEngine volumeEngine = enterVolume(reader, name);
+        int year = enterYearOfCarProduction(reader);
+        WheelSize wheelSize = enterWheelSize(reader, name);
+        Option[] options = enterOptions(reader, name);
+        Params params = enterParams(reader, name);
+        if (validationOnNull(name, model, color, volumeEngine, wheelSize, options, params)) {
+            return null;
+        }
+        if (validationOnName(name, AUDI)) {
+            AudiParams audiParams = (AudiParams) params;
+            return new CarAudi((ModelForAudi) model, (ColorForAudi) color, (VolumeOfEngineForAudi) volumeEngine,
+                    year, (WheelSizeForAudi) wheelSize, (OptionForAudi[]) options, audiParams.getCountOfDoorsForAudi()
+            );
+        } else if (validationOnName(name, BMW)) {
+            BMWParams bmwParams = (BMWParams) params;
+            return new CarBMW((ModelForBMW) model, (ColorForBMW) color, (VolumeOfEngineForBMW) volumeEngine,
+                    year, (WheelSizeBMW) wheelSize, (OptionForBMW[]) options, bmwParams.getMaxSpeedForBMW());
+        } else if (validationOnName(name, MERSEDES)) {
+            MersedesParams mersedesParams = (MersedesParams) params;
+            return new CarMersedes((ModelForMersedes) model, (ColorForMersedes) color,
+                    (VolumeOfEngineForMersedes) volumeEngine, year, (WheelSizeMersedes) wheelSize, (OptionForMersedes[]) options,
+                    mersedesParams.getCountOfHeadLightForMersedes());
+        }
+        return null;
+    }
+
+    public Car changeColor(Car car, BufferedReader reader) {
+        if (car == null) {
+            catchError();
+        }
+        Color color = null;
+        if (car instanceof CarAudi) {
+            color = enterColorForAudi(reader);
+        } else if (car instanceof CarMersedes) {
+            color = enterColorForMersedes(reader);
+        } else if (car instanceof CarBMW) {
+            color = enterColorForBMW(reader);
+        }
+        if (serviceToChangeColor.changeColor(car, color)) {
+            System.out.println("Your car:");
+            System.out.println(car);
+            return car;
+        } else {
+            return null;
+        }
+    }
+
+    public Car changeWheelSize(Car car, BufferedReader reader) {
+        if (car == null) {
+            catchError();
+        }
+        WheelSize wheelSize = null;
+        if (car instanceof CarAudi) {
+            wheelSize = enterWheelSizeForAudi(reader);
+        } else if (car instanceof CarMersedes) {
+            wheelSize = enterWheelSizeForMersedes(reader);
+        } else if (car instanceof CarBMW) {
+            wheelSize = enterWheelSizeForBMW(reader);
+        }
+        if (serviceToChangeWheels.changeWheels(car, wheelSize)) {
+            System.out.println("Your car:");
+            System.out.println(car);
+            return car;
+        } else {
+            return null;
+        }
+    }
+
+    public Car changeOptions(Car car, BufferedReader reader) {
+        if (car == null) {
+            catchError();
+        }
+        Option[] options = null;
+        if (car instanceof CarAudi) {
+            options = enterOptionsForAudi(reader);
+        } else if (car instanceof CarMersedes) {
+            options = enterOptionsForMersedes(reader);
+        } else if (car instanceof CarBMW) {
+            options = enterOptionsForBMW(reader);
+        }
+        if (serviceToChangeOptions.changeOptions(car, options)) {
+            System.out.println("Your car:");
+            System.out.println(car);
+            return car;
+        } else {
+            return null;
+        }
     }
 }

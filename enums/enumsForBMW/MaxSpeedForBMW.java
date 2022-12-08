@@ -1,6 +1,8 @@
 package enums.enumsForBMW;
 
-public enum MaxSpeedForBMW {
+import interfaces.OtherDetail;
+
+public enum MaxSpeedForBMW implements OtherDetail {
     TWO_HUNDRED_AND_SIXTY,
     TWO_HUNDRED_AND_SEVENTY,
     TWO_HUNDRED_AND_FIFTY,

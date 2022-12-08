@@ -13,7 +13,8 @@ public class CarBMW extends Car {
 
     private final MaxSpeedForBMW maxSpeed;
 
-    public CarBMW(ModelForBMW modelForBMW, ColorForBMW colorForBMW, VolumeOfEngineForBMW volumeOfEngineForBMW, int year, WheelSizeBMW wheelSizeBMW, OptionForBMW[] optionForBMW, MaxSpeedForBMW maxSpeed) {
+    public CarBMW(ModelForBMW modelForBMW, ColorForBMW colorForBMW, VolumeOfEngineForBMW volumeOfEngineForBMW,
+                  int year, WheelSizeBMW wheelSizeBMW, OptionForBMW[] optionForBMW, MaxSpeedForBMW maxSpeed) {
         super(modelForBMW, colorForBMW, volumeOfEngineForBMW, year, wheelSizeBMW, optionForBMW, new BMWParams(maxSpeed));
         this.maxSpeed = maxSpeed;
     }
@@ -24,16 +25,10 @@ public class CarBMW extends Car {
 
     @Override
     public String toString() {
-        return format(
-                REPRESENTATION_TEMPLATE,
-                year,
-                model,
-                volumeOfEngine,
-                color,
-                wheelSize,
-                Arrays.toString(options),
-                maxSpeed
-        );
+        return "Audi {" +
+                super.toString() +
+                ", MaxSpeed = " + maxSpeed +
+                "}";
     }
 
 }

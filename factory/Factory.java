@@ -1,28 +1,35 @@
 package factory;
 
 import car.Car;
+import factory.storage.Storage;
 import interfaces.*;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-public abstract class Factory<T, P> {
-    protected static final int YEAR = 2022;
+public abstract class Factory<T, M extends Model, C extends Color, V extends VolumeEngine, W extends WheelSize, O extends Option, P> {
+    private final static Calendar calendar = Calendar.getInstance();
+    protected static final int YEAR  = calendar.get(Calendar.YEAR);
     protected Model[] models;
     protected Color[] colors;
     protected VolumeEngine[] volumeEngines;
     protected WheelSize[] wheelSizes;
     protected Option[] options;
+    protected final Storage storage;
 
 
-    public Factory(Model[] models, Color[] colors, VolumeEngine[] volumeEngines, WheelSize[] wheelSize, Option[] options) {
+    public Factory(Model[] models, Color[] colors, VolumeEngine[] volumeEngines, WheelSize[] wheelSize, Option[] options, Storage storage) {
         this.models = models;
         this.colors = colors;
         this.volumeEngines = volumeEngines;
         this.wheelSizes = wheelSize;
         this.options = options;
+        this.storage = storage;
     }
 
-    public abstract T createCar(Model model, Color color, VolumeEngine volumeEngine, WheelSize wheelSize, Option[] option, P params);
+    public abstract T createCar(M model, C color, V volumeEngine, W wheelSize, O[] option, P params);
 
     @Override
     public String toString() {

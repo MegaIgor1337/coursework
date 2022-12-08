@@ -4,9 +4,6 @@ import interfaces.*;
 import params.Params;
 
 import java.util.Arrays;
-import java.util.Set;
-
-import static java.lang.String.format;
 
 public abstract class Car {
     protected final Model model;
@@ -17,7 +14,9 @@ public abstract class Car {
     protected Option[] options;
     protected Params params;
 
-    public Car(Model model, Color color, VolumeEngine volumeOfEngine, int year, WheelSize wheelSize, Option[] options, Params params) {
+    public Car(Model model, Color color, VolumeEngine volumeOfEngine,
+            int year, WheelSize wheelSize, Option[] options,
+            Params params) {
         this.model = model;
         this.color = color;
         this.wheelSize = wheelSize;
@@ -66,13 +65,12 @@ public abstract class Car {
     @Override
     public String toString() {
         return "Car{" +
-                "model=" + model +
-                ", color=" + color +
-                ", volumeOfEngine=" + volumeOfEngine +
-                ", year=" + year +
-                ", wheelSize=" + wheelSize +
-                ", options=" + Arrays.toString(options) +
-                ", params=" + params +
+                "model = " + model +
+                ", color = " + color +
+                ", volumeOfEngine = " + volumeOfEngine +
+                ", year = " + year +
+                ", wheelSize = " + wheelSize +
+                ", options = " + Arrays.toString(options) +
                 '}';
     }
 }

@@ -3,29 +3,45 @@ package factory.factoryForAudi;
 import car.CarAudi;
 import enums.enumsForAudi.*;
 import factory.Factory;
+import factory.storage.Storage;
+import interfaces.Option;
+import interfaces.VolumeEngine;
+import interfaces.WheelSize;
 import params.AudiParams;
 import service.ServiceToChangeColor;
 import service.ServiceToChangeOptions;
 import service.ServiceToChangeWheels;
 
-public class FactoryForAudi extends Factory<CarAudi, AudiParams> {
-    private final StorageForAudi storageForAudi;
+public class FactoryForAudi extends Factory<CarAudi, ModelForAudi, ColorForAudi, VolumeOfEngineForAudi, WheelSizeForAudi, OptionForAudi, AudiParams> {
     private final ServiceToChangeColor serviceToChangeColor;
     private final ServiceToChangeWheels serviceToChangeWheels;
     private final ServiceToChangeOptions serviceToChangeOptions;
     private final CountOfDoorsForAudi[] countsOfDoorsForAudi;
 
-    public FactoryForAudi(ModelForAudi[] modelsForAudi, ColorForAudi[] colorsForAudi, VolumeOfEngineForAudi[] volumesOfEngineForAudi, WheelSizeForAudi[] wheelSizeForAudi, OptionForAudi[] options, CountOfDoorsForAudi[] countOfDoorsForAudi, StorageForAudi storage, ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels, ServiceToChangeOptions serviceToChangeOptions) {
-        super(modelsForAudi, colorsForAudi, volumesOfEngineForAudi, wheelSizeForAudi, options);
-        this.storageForAudi = storage;
+    public FactoryForAudi(
+            ModelForAudi[] modelsForAudi, ColorForAudi[] colorsForAudi,
+            VolumeOfEngineForAudi[] volumesOfEngineForAudi, WheelSizeForAudi[] wheelSizeForAudi,
+            OptionForAudi[] options, CountOfDoorsForAudi[] countOfDoorsForAudi, Storage storage,
+            ServiceToChangeColor serviceToChangeColor, ServiceToChangeWheels serviceToChangeWheels,
+            ServiceToChangeOptions serviceToChangeOptions
+    ) {
+        super(modelsForAudi, colorsForAudi, volumesOfEngineForAudi, wheelSizeForAudi, options, storage);
         this.serviceToChangeColor = serviceToChangeColor;
         this.serviceToChangeWheels = serviceToChangeWheels;
         this.serviceToChangeOptions = serviceToChangeOptions;
         this.countsOfDoorsForAudi = countOfDoorsForAudi;
     }
 
-    public CarAudi createCar(ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi, WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, AudiParams audiParams) {
-        CarAudi carAudi = storageForAudi.getCarFromStorage(modelForAudi, colorForAudi, volumeOfEngineForAudi, wheelSizeForAudi, optionsForAudi, audiParams);
+    public CarAudi createCar(
+            ModelForAudi modelForAudi, ColorForAudi colorForAudi, VolumeOfEngineForAudi volumeOfEngineForAudi,
+            WheelSizeForAudi wheelSizeForAudi, OptionForAudi[] optionsForAudi, AudiParams audiParams
+    ) {
+        if (modelForAudi == null || colorForAudi == null || volumeOfEngineForAudi == null || wheelSizeForAudi == null || optionsForAudi == null || audiParams == null) {
+            return null;
+        }
+        CarAudi carAudi = storage.getAudiFromStorage(
+                modelForAudi, colorForAudi, volumeOfEngineForAudi, wheelSizeForAudi, optionsForAudi, audiParams
+        );
         if (carAudi != null) {
             if (carAudi.getColor() != colorForAudi) {
                 serviceToChangeColor.changeColor(carAudi, colorForAudi);
@@ -36,7 +52,10 @@ public class FactoryForAudi extends Factory<CarAudi, AudiParams> {
             serviceToChangeOptions.changeOptions(carAudi, optionsForAudi);
             return carAudi;
         } else {
-            return new CarAudi(modelForAudi, colorForAudi, volumeOfEngineForAudi, YEAR, wheelSizeForAudi, optionsForAudi, audiParams.getCountOfDoorsForAudi());
+            return new CarAudi(
+                    modelForAudi, colorForAudi, volumeOfEngineForAudi, YEAR,
+                    wheelSizeForAudi, optionsForAudi, audiParams.getCountOfDoorsForAudi()
+            );
         }
     }
 
